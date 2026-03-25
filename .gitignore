@@ -22,3 +22,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+.venv/
+.venv-1/
+__pycache__/
+*.pyc
+debug_output/
+uploads/
