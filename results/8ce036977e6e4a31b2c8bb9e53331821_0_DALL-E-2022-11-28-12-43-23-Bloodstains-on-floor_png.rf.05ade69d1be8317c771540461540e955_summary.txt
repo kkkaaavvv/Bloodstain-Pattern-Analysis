@@ -1,0 +1,23 @@
+=======================================================
+   BLOODSTAIN PATTERN ANALYSIS REPORT
+   Generated: 2026-04-14 12:07:06
+=======================================================
+
+Image           : uploads\8ce036977e6e4a31b2c8bb9e53331821_0_DALL-E-2022-11-28-12-43-23-Bloodstains-on-floor_png.rf.05ade69d1be8317c771540461540e955.jpg
+Total stains    : 2
+Mean angle      : 48.9°
+Min angle       : 47.6°
+Max angle       : 50.1°
+Area of Origin  : (np.int64(632), np.int64(0))
+
+Stain Breakdown:
+  Circular   (≥70°) : 0
+  Elliptical (45-70): 2
+  Elongated  (20-45): 0
+  Very shallow (<20): 0
+
+-------------------------------------------------------
+  ID            Center   Impact θ  Type
+-------------------------------------------------------
+#  1        (485, 478)      50.1°  ELLIPTICAL (medium)
+#  2        (751, 576)      47.6°  ELLIPTICAL (medium)
