@@ -1,2 +1,0 @@
-image,total_stains,mean_angle,min_angle,max_angle,circular,elliptical,elongated,very_shallow,convergence_pt
-images/okok.jpg,3,30.5,18.0,44.3,0,0,2,1,"(np.int64(216), np.int64(0))"

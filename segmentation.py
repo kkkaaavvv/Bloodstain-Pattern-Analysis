@@ -4,23 +4,8 @@ import os
 
 def detect_stains(original: np.ndarray, binary: np.ndarray,
                   min_area: int = 100, debug: bool = False) -> tuple:
-    """
-    Detects individual stains from binary mask using contour detection.
 
-    Args:
-        original  : Original BGR image (for drawing)
-        binary    : Clean binary mask from preprocessing
-        min_area  : Minimum contour area to keep (filters noise)
-        debug     : If True, saves output image
-
-    Returns:
-        contours_filtered : List of valid contours
-        output_image      : Original image with stain boundaries drawn
-    """
-
-    # ── 1. Find all contours ───────────────────────────────────────────────────
-    # RETR_EXTERNAL : only outermost contours (ignores holes inside stains)
-    # CHAIN_APPROX_SIMPLE : compresses contour points (saves memory)
+    # ── 1. Find all contours ────
     contours, _ = cv2.findContours(
         binary,
         cv2.RETR_EXTERNAL,
@@ -28,12 +13,12 @@ def detect_stains(original: np.ndarray, binary: np.ndarray,
     )
     print(f"[INFO] Total raw contours found: {len(contours)}")
 
-    # ── 2. Filter small contours ───────────────────────────────────────────────
+    # ── 2. Filter small contours ─────────────
     # Anything below min_area pixels is likely noise, not a real stain
     contours_filtered = [c for c in contours if cv2.contourArea(c) >= min_area]
     print(f"[INFO] Contours after filtering (min_area={min_area}): {len(contours_filtered)}")
 
-    # ── 3. Draw contours on a copy of the original ────────────────────────────
+    # ── 3. Draw contours on a copy of the original ────────────────
     output_image = original.copy()
 
     for i, contour in enumerate(contours_filtered):
@@ -77,10 +62,10 @@ if __name__ == "__main__":
     original, gray, binary = preprocess_image(image_path, debug=False)
 
     # Detect stains
-    contours, output = detect_stains(original, binary, min_area=1000, debug=True)
+    contours, output = detect_stains(original, binary, min_area=3000, debug=True)
 
     # Show result
-    # ── Resized display window ─────────────────────────────────────────────────
+    # ── Resized display window ─────────────────
     screen_size = 750  # reduce to 650 if still too wide
 
     h, w = output.shape[:2]

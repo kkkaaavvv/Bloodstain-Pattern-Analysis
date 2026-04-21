@@ -7,22 +7,7 @@ def draw_trajectories(original: np.ndarray,
                       line_length: int = 2000,
                       min_elongation: float = 1.3,
                       debug: bool = False) -> tuple:
-    """
-    Draws direction arrows and backward trajectory lines.
-    Estimates Area of Convergence from line intersections.
-
-    Args:
-        original       : Original BGR image
-        angle_data     : Enriched ellipse+angle data
-        line_length    : How far to extend trajectory lines (pixels)
-        min_elongation : Only use stains where major/minor >= this ratio
-                         (circular stains have no reliable direction)
-        debug          : Save output if True
-
-    Returns:
-        output_image   : Annotated image
-        convergence_pt : Estimated (x, y) area of convergence
-    """
+   
 
     output_image = original.copy()
     h, w = original.shape[:2]
