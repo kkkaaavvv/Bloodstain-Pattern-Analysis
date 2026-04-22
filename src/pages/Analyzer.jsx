@@ -9,34 +9,36 @@ function Analyzer() {
   const [results, setResults] = useState(null);
   const navigate = useNavigate();
 
-  const handleAnalyze = () => {
+  const handleAnalyze = async () => {
     if (!image) return;
 
     setLoading(true);
     setResults(null);
 
-    // MOCK (structure only — backend will replace this)
-    setTimeout(() => {
-      setResults({
-        steps: {
-          grayscale: image,
-          blurred: image,
-          threshold: image,
-          contours: image,
-          ellipses: image,
-          reconstruction: image,
-        },
-        metrics: {}, // backend will fill this
+    const formData = new FormData();
+    formData.append("file", image);
+
+    try {
+      const response = await fetch("http://127.0.0.1:5000/analyze", {
+        method: "POST",
+        body: formData,
       });
 
-      setLoading(false);
-    }, 2000);
+      const data = await response.json();
+      console.log("RESULT:", data);
+
+      setResults(data.result);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+
+    setLoading(false);
   };
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white px-6 py-10">
 
-      {/* 🔴 BACKGROUND ATMOSPHERE (MATCH HOMEPAGE) */}
+      {/* BACKGROUND */}
       <div className="fixed inset-0 -z-10 overflow-hidden">
         <div className="absolute right-[-150px] top-1/3 w-[500px] h-[500px] 
                         bg-[#7F1F0E] rounded-full blur-[140px] opacity-25"></div>
@@ -90,15 +92,13 @@ function Analyzer() {
         {results && !loading && (
           <div className="space-y-10">
 
-            {/* PROCESS STEPS */}
             <div>
               <h2 className="text-xl font-semibold mb-4 text-center">
                 Processing Pipeline
               </h2>
 
               <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-
-                {Object.entries(results.steps).map(([key, value]) => (
+                {Object.entries(results.steps || {}).map(([key, value]) => (
                   <div
                     key={key}
                     className="bg-white/5 border border-white/10 rounded-xl p-3 text-center backdrop-blur-md"
@@ -114,11 +114,9 @@ function Analyzer() {
                     />
                   </div>
                 ))}
-
               </div>
             </div>
 
-            {/* 🔲 METRICS PLACEHOLDER (BACKEND WILL FILL) */}
             <div>
               <h2 className="text-xl font-semibold mb-4 text-center">
                 Analysis Results

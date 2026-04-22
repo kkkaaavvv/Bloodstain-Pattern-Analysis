@@ -1,6 +1,9 @@
 from flask import Flask, send_file, request, jsonify
 from flask_cors import CORS
 import os
+import uuid
+
+from services.pipeline_service import run_cv
 
 app = Flask(__name__)
 CORS(app)
@@ -17,22 +20,24 @@ def get_result(filename):
     return send_file(os.path.join(OUTPUT_FOLDER, filename))
 
 
-# ✅ REAL WORKING ANALYZE ROUTE
 @app.route("/analyze", methods=["POST"])
 def analyze():
-    file = request.files.get("file")
-
-    if not file:
+    if "file" not in request.files:
         return jsonify({"error": "No file uploaded"}), 400
 
-    print("ANALYZE HIT:", file.filename)
+    file = request.files["file"]
+
+    # Save uploaded file
+    filename = f"{uuid.uuid4().hex}_{file.filename}"
+    filepath = os.path.join(UPLOAD_FOLDER, filename)
+    file.save(filepath)
+
+    # Run CV pipeline
+    result = run_cv(filepath, OUTPUT_FOLDER)
 
     return jsonify({
-        "summary": {
-            "total_stains": 10,
-            "mean_angle": 30
-        },
-        "image": file.filename
+        "method": "cv",
+        "result": result
     })
 
 

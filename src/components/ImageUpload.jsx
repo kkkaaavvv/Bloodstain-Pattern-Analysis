@@ -11,7 +11,7 @@ function ImageUpload({ onImageSelect }) {
 
       setPreview(imageURL);
 
-      // ✅ FIX: send actual file, not preview URL
+      // send actual file to parent
       onImageSelect(file);
     }
   };

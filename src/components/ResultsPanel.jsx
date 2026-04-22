@@ -1,7 +1,7 @@
 function ResultsPanel({ results }) {
-  if (!results) return null;
+  if (!results || !results.summary) return null;
 
-  const summary = results.summary || {};
+  const summary = results.summary;
 
   return (
     <div className="mt-6">
@@ -9,20 +9,23 @@ function ResultsPanel({ results }) {
         Analysis Results
       </h2>
 
-      <div className="grid grid-cols-2 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
 
-        <MetricCard
-          label="Total Stains"
-          value={summary.total_stains ?? "N/A"}
-        />
+        <MetricCard label="Total Stains" value={summary.total_stains ?? "N/A"} />
 
         <MetricCard
           label="Mean Angle"
-          value={
-            summary.mean_angle !== undefined
-              ? `${summary.mean_angle}°`
-              : "N/A"
-          }
+          value={summary.mean_angle !== undefined ? `${summary.mean_angle}°` : "N/A"}
+        />
+
+        <MetricCard
+          label="Min Angle"
+          value={summary.min_angle !== undefined ? `${summary.min_angle}°` : "N/A"}
+        />
+
+        <MetricCard
+          label="Max Angle"
+          value={summary.max_angle !== undefined ? `${summary.max_angle}°` : "N/A"}
         />
 
       </div>
