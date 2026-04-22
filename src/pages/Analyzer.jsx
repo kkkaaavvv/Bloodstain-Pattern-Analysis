@@ -11,37 +11,37 @@ function Analyzer() {
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState(null);
 
-  const handleAnalyze = () => {
+  const handleAnalyze = async () => {
     if (!image) return;
 
     setLoading(true);
     setResults(null);
 
-    setTimeout(() => {
-      if (mode === "cv") {
-        setResults({
-          type: "cv",
-          totalStains: 24,
-          meanAngle: 32,
-          maxAngle: 67,
-        });
-      } else {
-        setResults({
-          type: "yolo",
-          accuracy: 91,
-          precision: 88,
-          recall: 85,
-          f1: 86,
-        });
-      }
+    const formData = new FormData();
+    formData.append("file", image);
+    formData.append("mode", mode);
 
-      setLoading(false);
-    }, 2000);
+    try {
+      const response = await fetch("http://127.0.0.1:5000/analyze", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      console.log("RESULT:", data);
+
+      setResults(data.result);
+
+    } catch (error) {
+      console.error("Error:", error);
+    }
+
+    setLoading(false);
   };
 
   return (
     <div className="min-h-screen bg-black text-white flex items-center justify-center px-4">
-
       <div className="w-full max-w-5xl bg-white/5 border border-white/10 rounded-2xl p-6">
 
         <h1 className="text-2xl font-semibold mb-6 text-center">
@@ -63,9 +63,11 @@ function Analyzer() {
         )}
 
         {loading && <Loader />}
+
         {image && !loading && (
           <ImageDisplay image={image} results={results} />
         )}
+
         {!loading && <ResultsPanel results={results} />}
 
       </div>
