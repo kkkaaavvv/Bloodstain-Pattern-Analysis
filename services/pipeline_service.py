@@ -1,58 +1,87 @@
-import time
 import os
-import uuid
-
+import glob
 from main import run_pipeline
 from utils.helpers import convert_numpy
 
-
-# 🔹 CV wrapper (used by API)
 def run_cv(image_path, output_folder):
-    summary, _ = run_pipeline(image_path, output_dir=output_folder)
 
+    DEBUG_FOLDER = "debug_output"
+
+    # 🔥 0. CLEAR OLD RESULTS
+    for f in os.listdir(output_folder):
+        try:
+            os.remove(os.path.join(output_folder, f))
+        except Exception as e:
+            print(f"⚠️ Could not delete {f}: {e}")
+
+    # 🔥 0.1 CLEAR OLD DEBUG OUTPUT (THIS WAS MISSING)
+    for f in os.listdir(DEBUG_FOLDER):
+        try:
+            os.remove(os.path.join(DEBUG_FOLDER, f))
+        except Exception as e:
+            print(f"⚠️ Could not delete debug file {f}: {e}")
+
+    # 🔽 Run pipeline
+    summary, _ = run_pipeline(image_path, output_dir=output_folder)
     summary = convert_numpy(summary)
 
-    return {
-        "image": os.path.basename(summary["output_image"]),
-        "stains": summary.get("total_stains",0 ),
-        "summary": summary
+    steps = {}
+
+    # ✅ 1. Add reconstruction (from summary if exists)
+    if "output_image" in summary:
+        path = summary["output_image"]
+        if path and os.path.exists(path):
+            steps["reconstruction"] = path
+
+    # ✅ 2. Scan debug_output for pipeline steps (now always fresh)
+    file_map = {
+        "gray": "grayscale",
+        "blur": "blurred",
+        "binary": "threshold",
+        "contours": "contours",
+        "angles": "ellipses",
+        "reconstruction": "reconstruction"
     }
 
+    debug_files = glob.glob(os.path.join(DEBUG_FOLDER, "*.png"))
 
-# 🔹 Main processing function (used in API route)
-def process_image(file, upload_folder, output_folder, debug=False):
+    for file in debug_files:
+        name = os.path.basename(file).lower()
 
-    # Generate unique filename
-    filename = f"{uuid.uuid4().hex}_{file.filename}"
-    filepath = os.path.join(upload_folder, filename)
-    file.save(filepath)
+        for keyword, step_name in file_map.items():
+            if keyword in name:
+                steps[step_name] = file
 
-    start_time = time.time()
+    # 🔥 3. MATCH ONLY CURRENT RUN OUTPUT
+    final_image = None
+    summary_text = ""
 
-    # Run pipeline
-    summary, _ = run_pipeline(filepath, output_dir=output_folder)
+    base_name = os.path.basename(image_path).split('.')[0]
 
-    # Convert numpy → python
-    summary = convert_numpy(summary)
+    for file in os.listdir(output_folder):
+        full_path = os.path.join(output_folder, file)
+        name = file.lower()
 
-    end_time = time.time()
+        if base_name in name and "analyzed" in name and file.endswith(".jpg"):
+            final_image = full_path
 
-    # Debug images (optional)
-    debug_images = None
-    if debug:
-        debug_images = {
-            "gray": "debug_output/1_gray.png",
-            "binary": "debug_output/4_binary.png",
-            "contours": "debug_output/5_contours.png",
-            "ellipses": "debug_output/6_ellipses.png",
-            "reconstruction": "debug_output/final_output.png"
-        }
+        elif base_name in name and "summary" in name and file.endswith(".txt"):
+            try:
+                with open(full_path, "r") as f:
+                    summary_text = f.read()
+            except Exception as e:
+                print(f"⚠️ Could not read summary: {e}")
 
-    # Final response
+    # 🔍 Debug logs
+    print("📂 Steps:", steps)
+    print("🖼 Final image:", final_image)
+    print("📄 Summary length:", len(summary_text))
+
     return {
-        "method": "cv",
-        "image": os.path.basename(summary["output_image"]),
-        "stains": summary.get("total_stains", 0),
-        "processing_time": round(end_time - start_time, 2),
-        "debug_images": debug_images
+        "steps": steps,
+        "metrics": {
+            "stains": summary.get("total_stains", 0)
+        },
+        "final_image": final_image,
+        "summary_text": summary_text
     }
