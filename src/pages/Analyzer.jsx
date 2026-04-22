@@ -19,14 +19,12 @@ function Analyzer() {
     formData.append("file", image);
 
     try {
-      const response = await fetch("http://127.0.0.1:5000/analyze", {
+      const response = await fetch("http://localhost:5000/analyze", {
         method: "POST",
         body: formData,
       });
 
       const data = await response.json();
-      console.log("RESULT:", data);
-
       setResults(data.result);
     } catch (error) {
       console.error("Error:", error);
@@ -38,7 +36,7 @@ function Analyzer() {
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white px-6 py-10">
 
-      {/* BACKGROUND */}
+      {/* 🔴 BACKGROUND */}
       <div className="fixed inset-0 -z-10 overflow-hidden">
         <div className="absolute right-[-150px] top-1/3 w-[500px] h-[500px] 
                         bg-[#7F1F0E] rounded-full blur-[140px] opacity-25"></div>
@@ -46,84 +44,137 @@ function Analyzer() {
                         bg-[#3D0A05] rounded-full blur-[120px] opacity-20"></div>
       </div>
 
-      {/* BACK BUTTON */}
+      {/* 🔙 BACK BUTTON */}
       <button
         onClick={() => navigate("/")}
-        className="text-gray-400 hover:text-white mb-6"
+        className="text-gray-400 hover:text-white mb-6 text-sm"
       >
         ← Back to Home
       </button>
 
-      <div className="max-w-6xl mx-auto space-y-10">
+      {/* 🔥 IMPORTANT: REMOVED max-w-6xl */}
+      <div className="w-full px-4 md:px-10 space-y-12">
 
-        {/* TITLE */}
-        <h1 className="text-3xl md:text-4xl font-semibold text-center">
+        {/* 🔥 TITLE */}
+        <h1 className="text-4xl md:text-5xl font-bold text-center text-[#7F1F0E]">
           Bloodstain Analysis
         </h1>
 
-        {/* INFO */}
-        <div className="bg-white/5 border border-white/10 rounded-xl p-5 text-gray-300 text-sm backdrop-blur-md text-center">
+        {/* 📌 INFO */}
+        <div className="bg-white/5 border border-white/10 rounded-xl p-8 text-gray-300 text-base md:text-lg backdrop-blur-md text-center leading-relaxed max-w-4xl mx-auto">
           Upload an image to analyze bloodstain patterns.  
           The system processes the image through grayscale conversion, thresholding, 
           contour detection, ellipse fitting, and trajectory reconstruction.
         </div>
 
-        {/* UPLOAD */}
-        <div className="bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-md">
+        {/* 📂 UPLOAD */}
+        <div className="bg-white/5 border border-white/10 rounded-2xl p-10 backdrop-blur-md text-center space-y-6 max-w-3xl mx-auto">
+
           <ImageUpload onImageSelect={setImage} />
 
           {image && (
-            <div className="flex justify-center mt-6">
+            <p className="text-sm text-gray-400">
+              Selected file: <span className="text-white">{image.name}</span>
+            </p>
+          )}
+
+          {image && (
+            <div className="flex justify-center mt-4">
               <button
                 onClick={handleAnalyze}
-                className="px-6 py-2 bg-[#7F1F0E] rounded-lg 
-                           hover:bg-[#a12a15] transition shadow-md"
+                className="px-8 py-3 text-lg bg-[#7F1F0E] rounded-lg 
+                           hover:bg-[#a12a15] 
+                           shadow-[0_0_15px_rgba(127,31,14,0.5)]
+                           transition"
               >
                 Analyze
               </button>
             </div>
           )}
+
         </div>
 
-        {/* LOADING */}
+        {/* ⏳ LOADING */}
         {loading && <Loader />}
 
-        {/* RESULTS */}
+        {/* 🧪 RESULTS */}
         {results && !loading && (
-          <div className="space-y-10">
+          <div className="space-y-16">
 
+            {/* 🔬 PROCESSING PIPELINE */}
             <div>
-              <h2 className="text-xl font-semibold mb-4 text-center">
+              <h2 className="text-2xl md:text-3xl font-semibold mb-6 text-center">
                 Processing Pipeline
               </h2>
 
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
                 {Object.entries(results.steps || {}).map(([key, value]) => (
                   <div
                     key={key}
-                    className="bg-white/5 border border-white/10 rounded-xl p-3 text-center backdrop-blur-md"
+                    className="bg-white/5 border border-white/10 rounded-xl p-4 text-center backdrop-blur-md 
+                               hover:border-[#7F1F0E]/40 transition"
                   >
-                    <p className="text-sm text-gray-400 mb-2 capitalize">
+                    <p className="text-sm text-gray-400 mb-3 capitalize">
                       {key}
                     </p>
 
                     <img
                       src={value}
                       alt={key}
-                      className="w-full h-40 object-contain rounded"
+                      className="w-full h-44 object-contain rounded"
                     />
                   </div>
                 ))}
               </div>
             </div>
 
+            {/* 🧾 FINAL ANALYSIS (ACTUAL FIX) */}
             <div>
-              <h2 className="text-xl font-semibold mb-4 text-center">
-                Analysis Results
+              <h2 className="text-2xl md:text-3xl font-semibold mb-10 text-center">
+                Final Analysis
               </h2>
 
-              <div className="bg-white/5 border border-white/10 rounded-xl p-6 backdrop-blur-md text-center text-gray-500">
-                Results will be displayed here after processing.
+              {/* 🔥 FULL WIDTH GRID */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start w-full">
+
+                {/* LEFT */}
+                {results.final_image && (
+                  <div className="flex flex-col items-center space-y-4 w-full">
+                    <img
+                      src={results.final_image}
+                      alt="Final Result"
+                      className="w-full max-w-xl rounded-xl border border-white/10 shadow-lg"
+                    />
+
+                    {image && (
+                      <p className="text-sm text-gray-400">
+                        Source: <span className="text-white">{image.name}</span>
+                      </p>
+                    )}
+                  </div>
+                )}
+
+                {/* RIGHT (BIG DABBA FIXED) */}
+                {results.summary_text && (
+                  <div className="w-full flex">
+
+                    <div className="bg-white/5 border border-white/10 rounded-2xl 
+                                    p-10 md:p-12 
+                                    text-base 
+                                    text-gray-300 
+                                    whitespace-pre-line 
+                                    backdrop-blur-md 
+                                    leading-loose 
+                                    shadow-[0_0_40px_rgba(127,31,14,0.2)]
+                                    w-full h-full">
+
+                      {results.summary_text}
+
+                    </div>
+
+                  </div>
+                )}
+
               </div>
             </div>
 
