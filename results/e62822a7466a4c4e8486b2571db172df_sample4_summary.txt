@@ -1,0 +1,26 @@
+=======================================================
+   BLOODSTAIN PATTERN ANALYSIS REPORT
+   Generated: 2026-05-04 02:38:27
+=======================================================
+
+Image           : uploads\e62822a7466a4c4e8486b2571db172df_sample4.jpg
+Total stains    : 5
+Mean angle      : 31.2°
+Min angle       : 2.0°
+Max angle       : 42.0°
+Area of Origin  : (np.int64(328), np.int64(0))
+
+Stain Breakdown:
+  Circular   (≥70°) : 0
+  Elliptical (45-70): 0
+  Elongated  (20-45): 4
+  Very shallow (<20): 1
+
+-------------------------------------------------------
+  ID            Center   Impact θ  Type
+-------------------------------------------------------
+#  1        (240, 692)      34.3°  ELONGATED (shallow)
+#  2        (150, 667)      40.2°  ELONGATED (shallow)
+#  4         (77, 424)      37.5°  ELONGATED (shallow)
+#  5        (420, 537)      42.0°  ELONGATED (shallow)
+#  6         (801, 47)       2.0°  VERY SHALLOW (glancing)
