@@ -39,10 +39,10 @@ function ModelInsights() {
         backgroundImage: "url('/blood-bg.jpg')",
       }}
     >
-      {/* 🔴 DARK OVERLAY */}
+      {/*  DARK OVERLAY */}
       <div className="absolute inset-0 bg-black/75 -z-10"></div>
 
-      {/* 🔴 RED GLOW */}
+      {/*  RED GLOW */}
       <div className="absolute inset-0 -z-10 overflow-hidden">
         <div
           className="absolute right-[-200px] top-1/4 w-[650px] h-[650px]
@@ -55,7 +55,7 @@ function ModelInsights() {
         ></div>
       </div>
 
-      {/* 🔙 BACK BUTTON */}
+      {/*  BACK BUTTON */}
       <button
         onClick={() => navigate("/")}
         className="text-gray-100 hover:text-white mb-6 text-sm"
@@ -65,7 +65,7 @@ function ModelInsights() {
 
       <div className="w-full px-4 md:px-10 space-y-14">
 
-        {/* 🧠 TITLE */}
+        {/*  TITLE */}
         <motion.h1
           className="text-5xl md:text-6xl font-bold text-center text-white drop-shadow-lg"
           initial={{ opacity: 0, y: 40 }}
@@ -75,7 +75,7 @@ function ModelInsights() {
           Model Insights
         </motion.h1>
 
-        {/* 📌 INFO SECTION */}
+        {/*  INFO SECTION */}
         <motion.div
           className="bg-white/10 border border-white/10 rounded-2xl p-8 
                      text-gray-200 text-base md:text-lg backdrop-blur-xl 
@@ -91,7 +91,7 @@ function ModelInsights() {
           into model behavior and prediction quality.
         </motion.div>
 
-        {/* 📊 METRICS */}
+        {/*  METRICS */}
         <motion.div
           className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-6xl mx-auto"
           initial={{ opacity: 0, y: 60 }}
@@ -118,7 +118,7 @@ function ModelInsights() {
           ))}
         </motion.div>
 
-        {/* 📈 IMAGES */}
+        {/* IMAGES */}
         <motion.div
           className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto"
           initial={{ opacity: 0, y: 80 }}
@@ -154,7 +154,7 @@ function ModelInsights() {
 
       </div>
 
-      {/* 🔍 IMAGE PREVIEW MODAL */}
+      {/*  IMAGE PREVIEW MODAL */}
       {previewImage && (
         <div
           className="fixed inset-0 bg-black/80 backdrop-blur-md

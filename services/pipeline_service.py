@@ -7,34 +7,34 @@ from utils.helpers import convert_numpy
 def run_cv(image_path, output_folder):
     DEBUG_FOLDER = "debug_output"
 
-    # 🔥 0. CLEAR OLD RESULTS
+    #  0. CLEAR OLD RESULTS
     for f in os.listdir(output_folder):
         try:
             os.remove(os.path.join(output_folder, f))
         except Exception as e:
-            print(f"⚠️ Could not delete {f}: {e}")
+            print(f" Could not delete {f}: {e}")
 
-    # 🔥 0.1 CLEAR OLD DEBUG OUTPUT
+    #  0.1 CLEAR OLD DEBUG OUTPUT
     for f in os.listdir(DEBUG_FOLDER):
         try:
             os.remove(os.path.join(DEBUG_FOLDER, f))
         except Exception as e:
-            print(f"⚠️ Could not delete debug file {f}: {e}")
+            print(f" Could not delete debug file {f}: {e}")
 
-    # 🔽 Run full CV pipeline
+    #  Run full CV pipeline
     summary, _ = run_pipeline(image_path, output_dir=output_folder)
     summary = convert_numpy(summary)
 
     steps = {}
 
-    # ✅ 1. Add reconstruction image from summary if available
+    #  1. Add reconstruction image from summary if available
     if "output_image" in summary:
         path = summary["output_image"]
 
         if path and os.path.exists(path):
             steps["reconstruction"] = path
 
-    # ✅ 2. Scan debug_output for pipeline step images
+    # 2. Scan debug_output for pipeline step images
     file_map = {
         "gray": "grayscale",
         "blur": "blurred",
@@ -53,7 +53,6 @@ def run_cv(image_path, output_folder):
             if keyword in name:
                 steps[step_name] = file
 
-    # ✅ 3. Match only current run output files
     final_image = None
     summary_text = ""
 
@@ -82,15 +81,15 @@ def run_cv(image_path, output_folder):
                     summary_text = f.read()
 
             except Exception as e:
-                print(f"⚠️ Could not read summary: {e}")
+                print(f" Could not read summary: {e}")
 
-    # 🔍 Debug logs
+    #  Debug logs
     print("📂 Steps:", steps)
     print("🖼 Final image:", final_image)
     print("📄 Summary length:", len(summary_text))
     print("📊 Raw Summary:", summary)
 
-    # ✅ Return clean structured values for frontend
+    #  Return clean structured values for frontend
     return {
         "steps": steps,
 

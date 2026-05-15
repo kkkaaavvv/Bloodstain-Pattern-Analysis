@@ -11,10 +11,10 @@ function Dashboard() {
         backgroundImage: "url('/blood-bg.jpg')",
       }}
     >
-      {/* 🔴 DARK OVERLAY */}
+      {/*  DARK OVERLAY */}
       <div className="absolute inset-0 bg-black/70 -z-10"></div>
 
-      {/* 🔴 RED GLOW */}
+      {/*  RED GLOW */}
       <div className="absolute inset-0 -z-10 overflow-hidden">
         <div
           className="absolute right-[-200px] top-1/4 w-[700px] h-[700px]
@@ -27,7 +27,7 @@ function Dashboard() {
         ></div>
       </div>
 
-      {/* 🧊 HERO */}
+      {/*  HERO */}
       <section className="h-screen flex items-center justify-center px-6 text-center">
 
         <motion.div
@@ -45,7 +45,7 @@ function Dashboard() {
             Pattern Analysis
           </h1>
 
-          {/* 🔥 BUTTONS */}
+          {/*  BUTTONS */}
           <div className="flex flex-col gap-4 items-center">
 
             <button
@@ -71,7 +71,7 @@ function Dashboard() {
 
       </section>
 
-      {/* 🔬 WHAT DOES THE SYSTEM DO */}
+      {/*  WHAT DOES THE SYSTEM DO */}
       <section className="min-h-screen flex flex-col items-center justify-center px-6 py-20">
 
         <motion.div
@@ -93,7 +93,7 @@ function Dashboard() {
           </p>
         </motion.div>
 
-        {/* 🔥 FEATURE BOXES */}
+        {/*  FEATURE BOXES */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl w-full">
 
           {/* BOX 1 */}
@@ -169,7 +169,7 @@ function Dashboard() {
 
       </section>
 
-      {/* 📖 ABOUT */}
+      {/* ABOUT */}
       <section className="min-h-screen flex items-center justify-center px-6 py-20">
 
         <motion.div
